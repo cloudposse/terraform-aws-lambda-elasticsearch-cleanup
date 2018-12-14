@@ -1,4 +1,6 @@
-SHELL := /bin/bash
+SHELL           := /bin/bash
+LAMBDA_DIR      := lambda
+DEPS_CONTAINER  := alpine:3.8
 
 # List of targets the `readme` target should call before generating the readme
 export README_DEPS ?= docs/targets.md docs/terraform.md
@@ -8,3 +10,21 @@ export README_DEPS ?= docs/targets.md docs/terraform.md
 ## Lint terraform code
 lint:
 	$(SELF) terraform/install terraform/get-modules terraform/get-plugins terraform/lint terraform/validate
+
+define docker
+docker run -it -v $(PWD)/$(LAMBDA_DIR)/:/code -w /code $(DEPS_CONTAINER) /bin/sh -c '$(1)'
+endef
+
+## Install dependencies
+dependencies:
+	@echo "==> Installing Lambda function dependencies..."
+	@$(call docker, apk add --update py-pip && \
+	  pip install virtualenv && \
+	  virtualenv venv --always-copy && \
+	  source ./venv/bin/activate && \
+	  ./venv/bin/pip install -qUr requirements.txt)
+
+## Build Lambda function zip
+build: dependencies
+	@echo "==> Building Lambda function zip..."
+	@cd $(LAMBDA_DIR) && zip -r ../elasticsearch_cleanup.zip * && cd ../
