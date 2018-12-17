@@ -27,4 +27,5 @@ dependencies:
 ## Build Lambda function zip
 build: dependencies
 	@echo "==> Building Lambda function zip..."
-	@cd $(LAMBDA_DIR) && zip -r ../elasticsearch_cleanup.zip * && cd ../
+	@mkdir -p artifacts
+	@cd $(LAMBDA_DIR) && zip -r  ../artifacts/lambda.zip * && cd ../

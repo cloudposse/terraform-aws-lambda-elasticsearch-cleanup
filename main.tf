@@ -72,6 +72,13 @@ module "label" {
   enabled    = "true"
 }
 
+module "artifact" {
+  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.1.1"
+  filename    = "lambda.zip"
+  module_name = "terraform-aws-lambda-elasticsearch-cleanup"
+  module_path = "${path.module}"
+}
+
 # Locals
 #--------------------------------------------------------------
 locals {
@@ -88,7 +95,7 @@ resource "aws_lambda_function" "default" {
   runtime          = "python${var.python_version}"
   role             = "${aws_iam_role.default.arn}"
   handler          = "es-cleanup.lambda_handler"
-  source_code_hash = "${base64sha256(file(local.lambda_path))}"
+  source_code_hash = "${module.artifact.base64sha256}"
   tags             = "${module.label.tags}"
 
   environment {
