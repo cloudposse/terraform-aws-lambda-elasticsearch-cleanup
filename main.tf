@@ -121,6 +121,26 @@ resource "aws_security_group" "default" {
   tags        = "${module.label.tags}"
 }
 
+resource "aws_security_group_rule" "udp_dns_egress_from_lambda" {
+  description       = "Allow outbound UDP traffic from Lambda Elasticsearch cleanup to DNS"
+  type              = "egress"
+  from_port         = 53
+  to_port           = 53
+  protocol          = "udp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.default.id}"
+}
+
+resource "aws_security_group_rule" "tcp_dns_egress_from_lambda" {
+  description       = "Allow outbound TCP traffic from Lambda Elasticsearch cleanup to DNS"
+  type              = "egress"
+  from_port         = 53
+  to_port           = 53
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.default.id}"
+}
+
 resource "aws_security_group_rule" "egress_from_lambda_to_es_cluster" {
   description              = "Allow outbound traffic from Lambda Elasticsearch cleanup SG to Elasticsearch SG"
   type                     = "egress"
