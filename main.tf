@@ -164,7 +164,6 @@ resource "aws_security_group_rule" "ingress_to_es_cluster_from_lambda" {
 resource "aws_iam_role" "default" {
   name               = "${local.function_name}"
   assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
-  tags               = "${module.label.tags}"
 }
 
 resource "aws_iam_role_policy" "default" {
