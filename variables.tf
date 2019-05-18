@@ -1,3 +1,9 @@
+variable "enabled" {
+  type        = "string"
+  default     = "true"
+  description = "This module will not create any resources unless enabled is set to \"true\""
+}
+
 variable "es_endpoint" {
   type        = "string"
   description = "The Elasticsearch endpoint for the Lambda function to connect to"

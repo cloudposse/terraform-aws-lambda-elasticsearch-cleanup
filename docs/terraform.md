@@ -12,6 +12,7 @@ is given
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | delete_after | Number of days to preserve | string | `15` | no |
 | delimiter | Delimiter to be used between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |
+| enabled | This module will not create any resources unless enabled is set to "true" | string | `true` | no |
 | es_domain_arn | The Elasticsearch domain ARN | string | - | yes |
 | es_endpoint | The Elasticsearch endpoint for the Lambda function to connect to | string | - | yes |
 | es_security_group_id | The Elasticsearch cluster security group ID | string | - | yes |
