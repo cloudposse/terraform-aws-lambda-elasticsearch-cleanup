@@ -48,6 +48,11 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 ## Usage
 
+
+**IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
+Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases).
+
+
 ```hcl
 module "elasticsearch_cleanup" {
   source               = "../"
@@ -92,6 +97,7 @@ is given
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | delete_after | Number of days to preserve | string | `15` | no |
 | delimiter | Delimiter to be used between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |
+| enabled | This module will not create any resources unless enabled is set to "true" | string | `true` | no |
 | es_domain_arn | The Elasticsearch domain ARN | string | - | yes |
 | es_endpoint | The Elasticsearch endpoint for the Lambda function to connect to | string | - | yes |
 | es_security_group_id | The Elasticsearch cluster security group ID | string | - | yes |
@@ -196,7 +202,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2018 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2019 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
