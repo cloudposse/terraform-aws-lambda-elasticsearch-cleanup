@@ -33,7 +33,7 @@ variable "subnet_ids" {
 variable "sns_arn" {
   type        = "string"
   default     = ""
-  description = "SNS ARN to pusblish alerts"
+  description = "SNS ARN to publish alerts"
 }
 
 variable "index" {

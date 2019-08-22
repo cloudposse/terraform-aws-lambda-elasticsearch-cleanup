@@ -76,7 +76,7 @@ module "artifact" {
   source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.1.1"
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
-  module_path = "${path.module}"
+  module_path = "${substr(path.module, length(path.cwd) + 1, -1)}"
 }
 
 # Locals
