@@ -22,7 +22,7 @@ is given
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
 | python_version | The Python version to use | string | `2.7` | no |
 | schedule | CloudWatch Events rule schedule using cron or rate expression | string | `cron(0 3 * * ? *)` | no |
-| sns_arn | SNS ARN to pusblish alerts | string | `` | no |
+| sns_arn | SNS ARN to publish alerts | string | `` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
 | subnet_ids | Subnet ids | list | - | yes |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | map | `<map>` | no |
