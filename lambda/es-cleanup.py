@@ -140,12 +140,17 @@ class ES_Cleanup(object):
         Returns:
             None
         """
-        _msg = "[%s][%s] %s" % (self.name, self.cur_account, msg)
-        print(_msg)
+
         if self.cfg["sns_arn"] != "":
-            sns_region = self.cfg["sns_arn"].split(":")[4]
+            cur_account = self.cfg["sns_arn"].split(":")[4]
+            _msg = "[%s][%s] %s" % (self.name, self.cur_account, msg)
+            print(_msg)
+            sns_region = self.cfg["sns_arn"].split(":")[3]
             sns = boto3.client("sns", region_name=sns_region)
             sns.publish(TopicArn=self.cfg["sns_arn"], Message=_msg)
+        else:
+            _msg = "No SNS topic provided. Just printing..."
+            print(_msg)
 
     def delete_index(self, index_name):
         """ES DELETE specific index
