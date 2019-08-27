@@ -181,24 +181,27 @@ def lambda_handler(event, context):
         None
     """
     es = ES_Cleanup(event, context)
-    # Index cutoff definition, remove older than this date
-    earliest_to_keep = datetime.date.today() - datetime.timedelta(
-        days=int(es.cfg["delete_after"]))
-    for index in es.get_indices():
-        if index["index"] == ".kibana":
-            # ignore .kibana index
-            print("Found .kibana index - ignoring")
-            continue
+    try:
+        # Index cutoff definition, remove older than this date
+        earliest_to_keep = datetime.date.today() - datetime.timedelta(
+            days=int(es.cfg["delete_after"]))
+        for index in es.get_indices():
+            if index["index"] == ".kibana":
+                # ignore .kibana index
+                print("Found .kibana index - ignoring")
+                continue
 
-        idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
-        idx_date = index["index"].split("-")[-1]
-        print("Found index: %s - %s" % (idx_name, idx_date))
-        if idx_name in es.cfg["index"] or "all" in es.cfg["index"]:
+            idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
+            idx_date = index["index"].split("-")[-1]
+            print("Found index: %s - %s" % (idx_name, idx_date))
+            if idx_name in es.cfg["index"] or "all" in es.cfg["index"]:
 
-            if idx_date <= earliest_to_keep.strftime(es.cfg["index_format"]):
-                print("Deleting index: %s" % index["index"])
-                es.delete_index(index["index"])
-
+                if idx_date <= earliest_to_keep.strftime(es.cfg["index_format"]):
+                    print("Deleting index: %s" % index["index"])
+                    es.delete_index(index["index"])
+    except Exception as e:
+        print(str(e))
+        es.send_error(str(e))
 
 if __name__ == '__main__':
     event = {
