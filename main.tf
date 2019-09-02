@@ -60,13 +60,13 @@ data "aws_iam_policy_document" "default" {
 
   statement {
     actions = [
-      "sns:Publish"
+      "sns:Publish",
     ]
 
     effect = "Allow"
 
     resources = [
-      "${var.sns_arn}"
+      "${var.sns_arn}",
     ]
   }
 }
