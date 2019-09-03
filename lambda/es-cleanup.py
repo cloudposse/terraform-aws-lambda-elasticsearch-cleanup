@@ -140,12 +140,17 @@ class ES_Cleanup(object):
         Returns:
             None
         """
-        _msg = "[%s][%s] %s" % (self.name, self.cur_account, msg)
-        print(_msg)
+
         if self.cfg["sns_arn"] != "":
-            sns_region = self.cfg["sns_arn"].split(":")[4]
+            cur_account = self.cfg["sns_arn"].split(":")[4]
+            _msg = "[%s][%s] %s" % (self.name, self.cur_account, msg)
+            print(_msg)
+            sns_region = self.cfg["sns_arn"].split(":")[3]
             sns = boto3.client("sns", region_name=sns_region)
             sns.publish(TopicArn=self.cfg["sns_arn"], Message=_msg)
+        else:
+            _msg = "No SNS topic provided. Just printing..."
+            print(_msg)
 
     def delete_index(self, index_name):
         """ES DELETE specific index
@@ -176,24 +181,27 @@ def lambda_handler(event, context):
         None
     """
     es = ES_Cleanup(event, context)
-    # Index cutoff definition, remove older than this date
-    earliest_to_keep = datetime.date.today() - datetime.timedelta(
-        days=int(es.cfg["delete_after"]))
-    for index in es.get_indices():
-        if index["index"] == ".kibana":
-            # ignore .kibana index
-            print("Found .kibana index - ignoring")
-            continue
+    try:
+        # Index cutoff definition, remove older than this date
+        earliest_to_keep = datetime.date.today() - datetime.timedelta(
+            days=int(es.cfg["delete_after"]))
+        for index in es.get_indices():
+            if index["index"] == ".kibana":
+                # ignore .kibana index
+                print("Found .kibana index - ignoring")
+                continue
 
-        idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
-        idx_date = index["index"].split("-")[-1]
-        print("Found index: %s - %s" % (idx_name, idx_date))
-        if idx_name in es.cfg["index"] or "all" in es.cfg["index"]:
+            idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
+            idx_date = index["index"].split("-")[-1]
+            print("Found index: %s - %s" % (idx_name, idx_date))
+            if idx_name in es.cfg["index"] or "all" in es.cfg["index"]:
 
-            if idx_date <= earliest_to_keep.strftime(es.cfg["index_format"]):
-                print("Deleting index: %s" % index["index"])
-                es.delete_index(index["index"])
-
+                if idx_date <= earliest_to_keep.strftime(es.cfg["index_format"]):
+                    print("Deleting index: %s" % index["index"])
+                    es.delete_index(index["index"])
+    except Exception as e:
+        print(str(e))
+        es.send_error(str(e))
 
 if __name__ == '__main__':
     event = {

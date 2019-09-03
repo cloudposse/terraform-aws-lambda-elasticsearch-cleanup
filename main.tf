@@ -57,6 +57,18 @@ data "aws_iam_policy_document" "default" {
       "${var.es_domain_arn}/*",
     ]
   }
+
+  statement {
+    actions = [
+      "sns:Publish",
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "${var.sns_arn}",
+    ]
+  }
 }
 
 # Modules
