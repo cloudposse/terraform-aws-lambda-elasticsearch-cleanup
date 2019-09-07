@@ -186,8 +186,8 @@ def lambda_handler(event, context):
         earliest_to_keep = datetime.date.today() - datetime.timedelta(
             days=int(es.cfg["delete_after"]))
         for index in es.get_indices():
-            if index["index"] == ".kibana":
-                # ignore .kibana index
+            if re.match(r'^.kibana', index["index"]):
+            # ignore .kibana & .kibana_N indices
                 print("Found .kibana index - ignoring")
                 continue
 
