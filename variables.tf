@@ -39,7 +39,7 @@ variable "sns_arn" {
 variable "index" {
   type        = "string"
   default     = "all"
-  description = "Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana`"
+  description = "Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana` or `.kibana_1`"
 }
 
 variable "delete_after" {
