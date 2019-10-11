@@ -83,13 +83,6 @@ Available targets:
   lint                                Lint terraform code
 
 ```
-## Module: cloudposse/terraform-aws-lambda-elasticsearch-cleanup
-
-This module creates a scheduled Lambda function which will delete old
-Elasticsearch indexes using SigV4Auth authentication. The lambda
-function can optionally send output to an SNS topic if the topic ARN
-is given
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -101,7 +94,7 @@ is given
 | es_domain_arn | The Elasticsearch domain ARN | string | - | yes |
 | es_endpoint | The Elasticsearch endpoint for the Lambda function to connect to | string | - | yes |
 | es_security_group_id | The Elasticsearch cluster security group ID | string | - | yes |
-| index | Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana` | string | `all` | no |
+| index | Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana` or `.kibana_1` | string | `all` | no |
 | index_format | Combined with 'index' variable and is used to evaluate the index age | string | `%Y.%m.%d` | no |
 | name | Solution name, e.g. 'app' or 'cluster' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |

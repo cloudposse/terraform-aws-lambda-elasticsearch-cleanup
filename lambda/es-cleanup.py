@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 This AWS Lambda function allowed to delete the old Elasticsearch index
+
+THIS FILE IS NOT EXACTLY THE ORIGINAL FILE DISTRIBUTED BY Cloudreach Europe Limited
+IT HAS BEEN MODIFIED BY Cloud Posse, LLC
 """
 
 from __future__ import print_function
@@ -14,8 +17,8 @@ import datetime
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 from botocore.credentials import create_credential_resolver
+from botocore.httpsession import URLLib3Session
 from botocore.session import get_session
-from botocore.vendored.requests import Session
 import sys
 if sys.version_info[0] == 3:
     from urllib.request import quote
@@ -117,7 +120,7 @@ class ES_Cleanup(object):
 
             try:
                 preq = req.prepare()
-                session = Session()
+                session = URLLib3Session()
                 res = session.send(preq)
                 if res.status_code >= 200 and res.status_code <= 299:
                     # print("%s %s" % (res.status_code, res.content))
@@ -186,9 +189,9 @@ def lambda_handler(event, context):
         earliest_to_keep = datetime.date.today() - datetime.timedelta(
             days=int(es.cfg["delete_after"]))
         for index in es.get_indices():
-            if index["index"] == ".kibana":
+            if index["index"] == ".kibana" or index["index"] == ".kibana_1":
                 # ignore .kibana index
-                print("Found .kibana index - ignoring")
+                print("Found Kibana index: %s - ignoring" % index["index"])
                 continue
 
             idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
