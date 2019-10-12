@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-data "aws_iam_policy_document" "default" {
+data "aws_iam_policy_document" "es_logs" {
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -57,7 +57,9 @@ data "aws_iam_policy_document" "default" {
       "${var.es_domain_arn}/*",
     ]
   }
+}
 
+data "aws_iam_policy_document" "sns" {
   statement {
     actions = [
       "sns:Publish",
@@ -69,6 +71,11 @@ data "aws_iam_policy_document" "default" {
       "${var.sns_arn}",
     ]
   }
+}
+
+data "aws_iam_policy_document" "default" {
+  source_json   = "${data.aws_iam_policy_document.es_logs.json}"
+  override_json = "${length(var.sns_arn) > 0 ? data.aws_iam_policy_document.sns.json : "{}"}"
 }
 
 # Modules
