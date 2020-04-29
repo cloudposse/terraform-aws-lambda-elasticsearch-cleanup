@@ -2,16 +2,10 @@
 * ## Module: cloudposse/terraform-aws-lambda-elasticsearch-cleanup
 *
 * This module creates a scheduled Lambda function which will delete old
-* Elasticsearch indexes using SigV4Auth authentication. The lambda 
+* Elasticsearch indexes using SigV4Auth authentication. The lambda
 * function can optionally send output to an SNS topic if the topic ARN
 * is given
 */
-
-# Terraform
-#--------------------------------------------------------------
-terraform {
-  required_version = ">= 0.10.2"
-}
 
 # Data
 #--------------------------------------------------------------
@@ -32,7 +26,7 @@ data "aws_iam_policy_document" "es_logs" {
     actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
-      "logs:PutLogEvents",
+      "logs:PutLogEvents"
     ]
 
     effect = "Allow"
@@ -48,7 +42,7 @@ data "aws_iam_policy_document" "es_logs" {
       "es:ESHttpHead",
       "es:ESHttpDelete",
       "es:Describe*",
-      "es:List*",
+      "es:List*"
     ]
 
     effect = "Allow"
@@ -62,169 +56,168 @@ data "aws_iam_policy_document" "es_logs" {
 data "aws_iam_policy_document" "sns" {
   statement {
     actions = [
-      "sns:Publish",
+      "sns:Publish"
     ]
 
     effect = "Allow"
 
     resources = [
-      "${var.sns_arn}",
+      var.sns_arn
     ]
   }
 }
 
 data "aws_iam_policy_document" "default" {
-  source_json   = "${data.aws_iam_policy_document.es_logs.json}"
-  override_json = "${length(var.sns_arn) > 0 ? data.aws_iam_policy_document.sns.json : "{}"}"
+  source_json   = data.aws_iam_policy_document.es_logs.json
+  override_json = length(var.sns_arn) > 0 ? data.aws_iam_policy_document.sns.json : "{}"
 }
 
 # Modules
 #--------------------------------------------------------------
 module "label" {
   source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.2.1"
-  namespace  = "${var.namespace}"
-  name       = "${var.name}"
-  stage      = "${var.stage}"
-  delimiter  = "${var.delimiter}"
-  attributes = "${compact(concat(var.attributes, list("elasticsearch", "cleanup")))}"
-  tags       = "${var.tags}"
-  enabled    = "true"
+  namespace  = var.namespace
+  name       = var.name
+  stage      = var.stage
+  delimiter  = var.delimiter
+  attributes = compact(concat(var.attributes, ["elasticsearch", "cleanup"]))
+  tags       = var.tags
 }
 
 module "artifact" {
   source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.1.1"
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
-  module_path = "${substr(path.module, length(path.cwd) + 1, -1)}"
+  module_path = substr(path.module, length(path.cwd) + 1, -1)
 }
 
 # Locals
 #--------------------------------------------------------------
 locals {
-  function_name = "${module.label.id}"
+  function_name = module.label.id
 }
 
 # Resources
 #--------------------------------------------------------------
 resource "aws_lambda_function" "default" {
-  count            = "${var.enabled == "true" ? 1 : 0}"
-  filename         = "${module.artifact.file}"
-  function_name    = "${local.function_name}"
-  description      = "${local.function_name}"
-  timeout          = "${var.timeout}"
+  count            = var.enabled ? 1 : 0
+  filename         = module.artifact.file
+  function_name    = local.function_name
+  description      = local.function_name
+  timeout          = var.timeout
   runtime          = "python${var.python_version}"
-  role             = "${aws_iam_role.default.arn}"
+  role             = join("", aws_iam_role.default.*.arn)
   handler          = "es-cleanup.lambda_handler"
-  source_code_hash = "${module.artifact.base64sha256}"
-  tags             = "${module.label.tags}"
+  source_code_hash = module.artifact.base64sha256
+  tags             = module.label.tags
 
   environment {
     variables = {
-      es_endpoint  = "${var.es_endpoint}"
-      index        = "${var.index}"
-      delete_after = "${var.delete_after}"
-      index_format = "${var.index_format}"
-      sns_arn      = "${var.sns_arn}"
+      es_endpoint  = var.es_endpoint
+      index        = var.index
+      delete_after = var.delete_after
+      index_format = var.index_format
+      sns_arn      = var.sns_arn
     }
   }
 
   vpc_config {
-    subnet_ids         = ["${var.subnet_ids}"]
-    security_group_ids = ["${aws_security_group.default.id}"]
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [join("", aws_security_group.default.*.id)]
   }
 }
 
 resource "aws_security_group" "default" {
-  count       = "${var.enabled == "true" ? 1 : 0}"
-  name        = "${local.function_name}"
-  description = "${local.function_name}"
-  vpc_id      = "${var.vpc_id}"
-  tags        = "${module.label.tags}"
+  count       = var.enabled ? 1 : 0
+  name        = local.function_name
+  description = local.function_name
+  vpc_id      = var.vpc_id
+  tags        = module.label.tags
 }
 
 resource "aws_security_group_rule" "udp_dns_egress_from_lambda" {
-  count             = "${var.enabled == "true" ? 1 : 0}"
+  count             = var.enabled ? 1 : 0
   description       = "Allow outbound UDP traffic from Lambda Elasticsearch cleanup to DNS"
   type              = "egress"
   from_port         = 53
   to_port           = 53
   protocol          = "udp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.default.id}"
+  security_group_id = join("", aws_security_group.default.*.id)
 }
 
 resource "aws_security_group_rule" "tcp_dns_egress_from_lambda" {
-  count             = "${var.enabled == "true" ? 1 : 0}"
+  count             = var.enabled ? 1 : 0
   description       = "Allow outbound TCP traffic from Lambda Elasticsearch cleanup to DNS"
   type              = "egress"
   from_port         = 53
   to_port           = 53
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.default.id}"
+  security_group_id = join("", aws_security_group.default.*.id)
 }
 
 resource "aws_security_group_rule" "egress_from_lambda_to_es_cluster" {
-  count                    = "${var.enabled == "true" ? 1 : 0}"
+  count                    = var.enabled ? 1 : 0
   description              = "Allow outbound traffic from Lambda Elasticsearch cleanup SG to Elasticsearch SG"
   type                     = "egress"
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
-  source_security_group_id = "${var.es_security_group_id}"
-  security_group_id        = "${aws_security_group.default.id}"
+  source_security_group_id = var.es_security_group_id
+  security_group_id        = join("", aws_security_group.default.*.id)
 }
 
 resource "aws_security_group_rule" "ingress_to_es_cluster_from_lambda" {
-  count                    = "${var.enabled == "true" ? 1 : 0}"
+  count                    = var.enabled ? 1 : 0
   description              = "Allow inbound traffic to Elasticsearch domain from Lambda Elasticsearch cleanup SG"
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
-  source_security_group_id = "${aws_security_group.default.id}"
-  security_group_id        = "${var.es_security_group_id}"
+  source_security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id        = var.es_security_group_id
 }
 
 resource "aws_iam_role" "default" {
-  count              = "${var.enabled == "true" ? 1 : 0}"
-  name               = "${local.function_name}"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
-  tags               = "${module.label.tags}"
+  count              = var.enabled ? 1 : 0
+  name               = local.function_name
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  tags               = module.label.tags
 }
 
 resource "aws_iam_role_policy" "default" {
-  count  = "${var.enabled == "true" ? 1 : 0}"
-  name   = "${local.function_name}"
-  role   = "${aws_iam_role.default.name}"
-  policy = "${data.aws_iam_policy_document.default.json}"
+  count  = var.enabled ? 1 : 0
+  name   = local.function_name
+  role   = join("", aws_iam_role.default.*.name)
+  policy = data.aws_iam_policy_document.default.json
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
-  count      = "${var.enabled == "true" ? 1 : 0}"
-  role       = "${aws_iam_role.default.name}"
+  count      = var.enabled ? 1 : 0
+  role       = join("", aws_iam_role.default.*.name)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_cloudwatch_event_rule" "default" {
-  count               = "${var.enabled == "true" ? 1 : 0}"
-  name                = "${local.function_name}"
-  description         = "${local.function_name}"
-  schedule_expression = "${var.schedule}"
+  count               = var.enabled ? 1 : 0
+  name                = local.function_name
+  description         = local.function_name
+  schedule_expression = var.schedule
 }
 
 resource "aws_lambda_permission" "default" {
-  count         = "${var.enabled == "true" ? 1 : 0}"
+  count         = var.enabled ? 1 : 0
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.default.arn}"
+  function_name = join("", aws_lambda_function.default.*.arn)
   principal     = "events.amazonaws.com"
-  source_arn    = "${aws_cloudwatch_event_rule.default.arn}"
+  source_arn    = join("", aws_cloudwatch_event_rule.default.*.arn)
 }
 
 resource "aws_cloudwatch_event_target" "default" {
-  count     = "${var.enabled == "true" ? 1 : 0}"
-  target_id = "${local.function_name}"
-  rule      = "${aws_cloudwatch_event_rule.default.name}"
-  arn       = "${aws_lambda_function.default.arn}"
+  count     = var.enabled ? 1 : 0
+  target_id = local.function_name
+  rule      = join("", aws_cloudwatch_event_rule.default.*.name)
+  arn       = join("", aws_lambda_function.default.*.arn)
 }
