@@ -55,4 +55,9 @@ func TestExamplesComplete(t *testing.T) {
 	// Verify we're getting back the outputs we expect
 	assert.Contains(t, domainEndpoint, "vpc-eg-test-es-cleanup")
 	assert.Contains(t, domainEndpoint, "us-east-2.es.amazonaws.com")
+
+	// Run `terraform output` to get the value of an output variable
+	lambdaFunctionArn := terraform.Output(t, terraformOptions, "lambda_function_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, lambdaFunctionArn, "function:eg-test-app-elasticsearch-cleanup")
 }
