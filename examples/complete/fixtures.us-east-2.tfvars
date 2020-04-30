@@ -29,3 +29,5 @@ create_iam_service_linked_role = false
 dns_zone_id = "Z3SO0TKDDQ0RGG"
 
 schedule = "rate(5 minutes)"
+
+artifact_url = "https://artifacts.cloudposse.com/terraform-external-module-artifact/example/test.zip"

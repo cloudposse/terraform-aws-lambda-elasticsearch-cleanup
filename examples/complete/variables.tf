@@ -78,3 +78,9 @@ variable "schedule" {
   default     = "cron(0 3 * * ? *)"
   description = "Schedule using cron or rate expression"
 }
+
+variable "artifact_url" {
+  type        = string
+  description = "URL template for the remote artifact"
+  default     = "https://artifacts.cloudposse.com/$$${module_name}/$$${git_ref}/$$${filename}"
+}

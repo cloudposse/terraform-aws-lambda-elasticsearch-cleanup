@@ -2,6 +2,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| artifact_url | URL template for the remote artifact | string | `https://artifacts.cloudposse.com/$$${module_name}/$$${git_ref}/$$${filename}` | no |
 | attributes | Additional attributes (e.g. `1`) | list(string) | `<list>` | no |
 | delete_after | Number of days to preserve | number | `15` | no |
 | delimiter | Delimiter to be used between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |

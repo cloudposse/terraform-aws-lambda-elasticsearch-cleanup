@@ -57,4 +57,5 @@ module "elasticsearch_cleanup" {
   namespace            = var.namespace
   stage                = var.stage
   schedule             = var.schedule
+  artifact_url         = var.artifact_url
 }

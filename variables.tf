@@ -106,3 +106,9 @@ variable "timeout" {
   default     = 300
   description = "Timeout for Lambda function in seconds"
 }
+
+variable "artifact_url" {
+  type        = string
+  description = "URL template for the remote artifact"
+  default     = "https://artifacts.cloudposse.com/$$${module_name}/$$${git_ref}/$$${filename}"
+}
