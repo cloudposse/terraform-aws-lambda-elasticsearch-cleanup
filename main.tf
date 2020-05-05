@@ -88,6 +88,7 @@ module "label" {
 module "artifact" {
   #source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.3.0"
   source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=add-enabled"
+  enabled     = var.enabled
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
   module_path = path.module
