@@ -18,7 +18,7 @@ endef
 ## Install dependencies
 dependencies:
 	@echo "==> Installing Lambda function dependencies..."
-	@$(call docker, apk add --update py-pip && \
+	@$(call docker, apk add -y --update py-pip && \
 	  pip install virtualenv && \
 	  virtualenv venv --always-copy && \
 	  source ./venv/bin/activate && \
