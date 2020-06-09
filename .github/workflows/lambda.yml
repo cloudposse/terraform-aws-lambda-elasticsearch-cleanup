@@ -1,0 +1,31 @@
+name: Lambda
+on:
+  push:
+    branches:
+      - master
+  pull_request: 
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the pull request branch
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Rebuild README
+      - name: Prepare
+        shell: bash
+        run: |
+           set -ex
+           make terraform/install
+           make terraform/get-plugins
+           make terraform/get-modules
+           make terraform/lint
+           make terraform/validate
+
+       - name: Build
+         run: make build
+
+
