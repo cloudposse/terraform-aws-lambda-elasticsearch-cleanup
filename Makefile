@@ -28,4 +28,5 @@ dependencies:
 build: dependencies
 	@echo "==> Building Lambda function zip..."
 	@mkdir -p artifacts
-	@cd $(LAMBDA_DIR) && zip -r  ../artifacts/lambda.zip * && cd ../
+	@cd $(LAMBDA_DIR) && zip -r  ../artifacts/lambda.zip *
+	@ls -l artifacts/lambda.zip
