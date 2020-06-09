@@ -12,7 +12,7 @@ lint:
 	$(SELF) terraform/install terraform/get-modules terraform/get-plugins terraform/lint terraform/validate
 
 define docker
-docker run -it -v $(PWD)/$(LAMBDA_DIR)/:/code -w /code $(DEPS_CONTAINER) /bin/sh -c '$(1)'
+docker run -i -v $(PWD)/$(LAMBDA_DIR)/:/code -w /code $(DEPS_CONTAINER) /bin/sh -c '$(1)'
 endef
 
 ## Install dependencies
