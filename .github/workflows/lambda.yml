@@ -30,7 +30,7 @@ jobs:
         run: make build
 
       - name: Deploy
-        run: aws s3 cp artifacts/lambda.zip s3://artifacts.prod.cloudposse.org/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
+        run: aws s3 cp --acl public-read artifacts/lambda.zip s3://artifacts.prod.cloudposse.org/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
