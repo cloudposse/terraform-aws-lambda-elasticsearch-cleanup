@@ -44,7 +44,7 @@
 
 # terraform-aws-lambda-elasticsearch-cleanup
 
- [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-lambda-elasticsearch-cleanup?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5eaa33ff1dc82bb99faa3905) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg)](https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+ [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-lambda-elasticsearch-cleanup?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5eaa33ff1dc82bb99faa3905) [![GitHub Action Build Status](https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/workflows/Lambda/badge.svg?branch=master)](https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/actions?query=workflow%3ALambda) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg)](https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to provision a scheduled Lambda function which will
