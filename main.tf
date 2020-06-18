@@ -116,9 +116,10 @@ resource "aws_lambda_function" "default" {
 
   environment {
     variables = {
+      delete_after = var.delete_after
       es_endpoint  = var.es_endpoint
       index        = var.index
-      delete_after = var.delete_after
+      index_regex  = var.index_regex
       index_format = var.index_format
       sns_arn      = var.sns_arn
     }

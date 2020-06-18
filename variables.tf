@@ -95,6 +95,13 @@ variable "index_format" {
   description = "Combined with 'index' variable and is used to evaluate the index age"
 }
 
+
+variable "index_regex" {
+  type        = string
+  default     = "([^-]+)-(.*)"
+  description = "Determines regex that is used for matching index name and index date. By default it match two groups separated by hyphen."
+}
+
 variable "python_version" {
   type        = string
   default     = "2.7"
