@@ -95,7 +95,6 @@ variable "index_format" {
   description = "Combined with 'index' variable and is used to evaluate the index age"
 }
 
-
 variable "index_regex" {
   type        = string
   default     = "([^-]+)-(.*)"
