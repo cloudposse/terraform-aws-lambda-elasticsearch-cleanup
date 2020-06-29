@@ -1,57 +1,34 @@
----
-#
-# This is the canonical configuration for the `README.md`
-# Run `make readme` to rebuild the `README.md`
-#
-
-# Name of this project
 name: terraform-aws-lambda-elasticsearch-cleanup
-
-# Logo for this project
-#logo: docs/logo.png
-
-# License of this project
-license: "APACHE2"
-
-# Canonical GitHub repo
+license: APACHE2
 github_repo: cloudposse/terraform-aws-lambda-elasticsearch-cleanup
-
-# Badges to display
 badges:
-  - name: "Codefresh Build Status"
-    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-lambda-elasticsearch-cleanup?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5eaa33ff1dc82bb99faa3905"
-  - name: "GitHub Action Build Status"
-    image: "https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/workflows/Lambda/badge.svg?branch=master"
-    url: "https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/actions?query=workflow%3ALambda"
-  - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg"
-    url: "https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest"
-  - name: "Slack Community"
-    image: "https://slack.cloudposse.com/badge.svg"
-    url: "https://slack.cloudposse.com"
-
+- name: GitHub Action Build Status
+  image: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/workflows/Lambda/badge.svg?branch=master
+  url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/actions?query=workflow%3ALambda
+- name: Latest Release
+  image: https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg
+  url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest
+- name: Slack Community
+  image: https://slack.cloudposse.com/badge.svg
+  url: https://slack.cloudposse.com
 related:
-  - name: "terraform-aws-vpc"
-    description: "Terraform Module that defines a VPC with public/private subnets across multiple AZs with Internet Gateways"
-    url: "https://github.com/cloudposse/terraform-aws-vpc"
-  - name: "terraform-aws-dynamic-subnets"
-    description: "Terraform module for dynamic subnets provisioning."
-    url: "https://github.com/cloudposse/terraform-aws-dynamic-subnets"
-  - name: "terraform-aws-elasticsearch"
-    description: "Terraform module for AWS Elasticsearch provisioning."
-    url: "https://github.com/cloudposse/terraform-aws-elasticsearch"
-
-# Short description of this project
+- name: terraform-aws-vpc
+  description: Terraform Module that defines a VPC with public/private subnets across
+    multiple AZs with Internet Gateways
+  url: https://github.com/cloudposse/terraform-aws-vpc
+- name: terraform-aws-dynamic-subnets
+  description: Terraform module for dynamic subnets provisioning.
+  url: https://github.com/cloudposse/terraform-aws-dynamic-subnets
+- name: terraform-aws-elasticsearch
+  description: Terraform module for AWS Elasticsearch provisioning.
+  url: https://github.com/cloudposse/terraform-aws-elasticsearch
 description: |-
   Terraform module to provision a scheduled Lambda function which will
   delete old Elasticsearch indexes using [SigV4Auth](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html) authentication. The
   lambda function can optionally send output to an SNS topic if the
   topic ARN is given. This module was largely inspired by
   [aws-lambda-es-cleanup](https://github.com/cloudreach/aws-lambda-es-cleanup)
-
-# How to use this project
-usage: |-
+usage: |2-
 
   For a complete example, see [examples/complete](examples/complete).
 
@@ -69,18 +46,15 @@ usage: |-
     schedule             = "rate(5 minutes)"
   }
   ```
-
 include:
-  - "docs/targets.md"
-  - "docs/terraform.md"
-
-# Contributors to this project
+- docs/targets.md
+- docs/terraform.md
 contributors:
-  - name: "Josh Myers"
-    github: "joshmyers"
-  - name: "Erik Osterman"
-    github: "osterman"
-  - name: "Andriy Knysh"
-    github: "aknysh"
-  - name: "Igor Rodionov"
-    github: "goruha"
+- name: Josh Myers
+  github: joshmyers
+- name: Erik Osterman
+  github: osterman
+- name: Andriy Knysh
+  github: aknysh
+- name: Igor Rodionov
+  github: goruha
