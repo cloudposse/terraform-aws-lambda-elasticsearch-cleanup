@@ -10,6 +10,7 @@ IT HAS BEEN MODIFIED BY Cloud Posse, LLC
 from __future__ import print_function
 import os
 import json
+import re
 import time
 import boto3
 import datetime
@@ -62,6 +63,7 @@ class ES_Cleanup(object):
         self.cfg["es_max_retry"] = int(self.get_parameter("es_max_retry", 3))
         self.cfg["index_format"] = self.get_parameter(
             "index_format", "%Y.%m.%d")
+        self.cfg["index_regex"] = self.get_parameter("index_regex", "([^-]+)-(.*)")
         self.cfg["sns_arn"] = self.get_parameter("sns_arn", "")
 
         if not self.cfg["es_endpoint"]:
@@ -194,8 +196,7 @@ def lambda_handler(event, context):
                 print("Found Kibana index: %s - ignoring" % index["index"])
                 continue
 
-            idx_name = '-'.join(word for word in index["index"].split("-")[:-1])
-            idx_date = index["index"].split("-")[-1]
+            idx_name, idx_date = re.match(es.cfg["index_regex"], index["index"]).groups()
             print("Found index: %s - %s" % (idx_name, idx_date))
             if idx_name in es.cfg["index"] or "all" in es.cfg["index"]:
 
