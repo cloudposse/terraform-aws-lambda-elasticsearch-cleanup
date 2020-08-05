@@ -1,5 +1,6 @@
+<!-- markdownlint-disable -->
 ## Makefile Targets
-```
+```text
 Available targets:
 
   build                               Build Lambda function zip
@@ -10,3 +11,4 @@ Available targets:
   lint                                Lint terraform code
 
 ```
+<!-- markdownlint-restore -->
