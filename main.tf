@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "default" {
 # Modules
 #--------------------------------------------------------------
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
   enabled    = var.enabled
   namespace  = var.namespace
   name       = var.name
@@ -86,7 +86,7 @@ module "label" {
 }
 
 module "artifact" {
-  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.3.0"
+  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.4.0"
   enabled     = var.enabled
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
