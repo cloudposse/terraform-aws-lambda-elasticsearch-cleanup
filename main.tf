@@ -73,7 +73,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 locals {
-  enabled = module.this.enabled
+  enabled       = module.this.enabled
   skip_index_re = var.skip_index_re == null ? "^\\.kibana*" : var.skip_index_re
 }
 
