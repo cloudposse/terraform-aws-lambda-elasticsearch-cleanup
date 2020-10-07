@@ -25,6 +25,7 @@ is given
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
+| artifact\_git\_ref | Git ref of the lambda artifact to use. Use latest version if null. | `string` | `null` | no |
 | artifact\_url | URL template for the remote artifact | `string` | `"https://artifacts.cloudposse.com/$${module_name}/$${git_ref}/$${filename}"` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
 | context | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | <pre>object({<br>    enabled             = bool<br>    namespace           = string<br>    environment         = string<br>    stage               = string<br>    name                = string<br>    delimiter           = string<br>    attributes          = list(string)<br>    tags                = map(string)<br>    additional_tag_map  = map(string)<br>    regex_replace_chars = string<br>    label_order         = list(string)<br>    id_length_limit     = number<br>  })</pre> | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_order": [],<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
@@ -44,7 +45,7 @@ is given
 | python\_version | The Python version to use | `string` | `"3.7"` | no |
 | regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | schedule | CloudWatch Events rule schedule using cron or rate expression | `string` | `"cron(0 3 * * ? *)"` | no |
-| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>\*\*\*Default is actually\*\*\* `^\\.kibana` but the README generator has issues. | `string` | `null` | no |
+| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>\*\*\*Default is actually\*\*\* `^\\.kibana` but the README generator has issues.<br>Use `"^$"` if you do not want to skip any indexes. | `string` | `null` | no |
 | sns\_arn | SNS ARN to publish alerts | `string` | `""` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | subnet\_ids | Subnet IDs | `list(string)` | n/a | yes |

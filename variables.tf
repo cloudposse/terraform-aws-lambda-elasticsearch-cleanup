@@ -60,6 +60,7 @@ variable "skip_index_re" {
   description = <<-EOT
     Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.
     ***Default is actually*** `^\\.kibana` but the README generator has issues.
+    Use `"^$"` if you do not want to skip any indexes.
     EOT
 }
 
@@ -80,3 +81,10 @@ variable "artifact_url" {
   description = "URL template for the remote artifact"
   default     = "https://artifacts.cloudposse.com/$$${module_name}/$$${git_ref}/$$${filename}"
 }
+
+variable "artifact_git_ref" {
+  type        = string
+  description = "Git ref of the lambda artifact to use. Use latest version if null."
+  default     = null
+}
+

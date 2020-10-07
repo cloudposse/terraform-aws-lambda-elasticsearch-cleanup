@@ -92,6 +92,7 @@ module "artifact" {
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
   module_path = path.module
+  git_ref     = var.artifact_git_ref
   url         = var.artifact_url
 }
 
