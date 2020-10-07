@@ -72,22 +72,23 @@ data "aws_iam_policy_document" "default" {
   override_json = length(var.sns_arn) > 0 ? data.aws_iam_policy_document.sns.json : "{}"
 }
 
+locals {
+  skip_index_re = var.skip_index_re == null ? "^\\.kibana*" : var.skip_index_re
+}
+
 # Modules
 #--------------------------------------------------------------
 module "label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
-  enabled    = var.enabled
-  namespace  = var.namespace
-  name       = var.name
-  stage      = var.stage
-  delimiter  = var.delimiter
-  attributes = compact(concat(var.attributes, ["elasticsearch", "cleanup"]))
-  tags       = var.tags
+  source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
+
+  attributes = compact(concat(module.this.attributes, ["elasticsearch", "cleanup"]))
+
+  context = module.this.context
 }
 
 module "artifact" {
-  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.3.0"
-  enabled     = var.enabled
+  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.5.0"
+  enabled     = module.this.enabled
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
   module_path = path.module
@@ -118,8 +119,8 @@ resource "aws_lambda_function" "default" {
     variables = {
       delete_after = var.delete_after
       es_endpoint  = var.es_endpoint
-      index        = var.index
-      index_regex  = var.index_regex
+      index        = var.index_re
+      skip_index   = local.skip_index_re
       index_format = var.index_format
       sns_arn      = var.sns_arn
     }

@@ -6,15 +6,15 @@ stage = "test"
 
 name = "es-cleanup"
 
-availability_zones = ["us-east-2a", "us-east-2b"]
+availability_zones = ["us-east-2a"]
 
 instance_type = "t2.small.elasticsearch"
 
 elasticsearch_version = "7.4"
 
-instance_count = 2
+instance_count = 1
 
-zone_awareness_enabled = true
+zone_awareness_enabled = false
 
 encrypt_at_rest_enabled = false
 
