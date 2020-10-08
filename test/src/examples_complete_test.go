@@ -14,6 +14,8 @@ func TestExamplesComplete(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
 		TerraformDir: "../../examples/complete",
+		// Suppress errors if there is a problem computing outputs during destroy
+		EnvVars:      map[string]string{"TF_WARN_OUTPUT_ERRORS": "1"},
 		Upgrade:      true,
 		// Variables to pass to our Terraform code using -var-file options
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
