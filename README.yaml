@@ -43,9 +43,42 @@ usage: |2-
     vpc_id               = module.vpc.vpc_id
     namespace            = "eg"
     stage                = "dev"
-    schedule             = "rate(5 minutes)"
+    schedule             = "cron(0 3 * * ? *)"
   }
   ```
+
+  Indexes are expected to be in the format `name-date` where `date` is in the format specified by `var.index_format`.
+  By default, all indexes except for the ones added by Kibana will be deleted based on the date part of the full
+  index name. The actual creation date of the index is not used.
+
+  Index matching is done with unanchored regular expresssion, so "bar" matches index "foobarbaz".
+
+  - If the full index name, including the date part, matches `skip_index_re`, then the index will be skipped (never deleted).
+    Kibana indexes are skipped by the default `skip_index_re` of `^\\.kibana*` so if you specify a value for `skip_index_re`
+    you must include the Kibana exception in your regex if you want it excepted. (Since Kibana indexes do not have a
+    date part, this module should not delete them, but will complain about them having malformed dates if they are not excluded.)
+  - If the index name without the trailing `-date` part matches `index_re`, then it will be cleaned up according to the date part.
+
+  Keep in mind that, fundamentally, this module expects indexes to be in the format of `name-date` so it will not work
+  properly if the regexes end up selecting an index that does not end with `-date`. To avoid edge cases, it is wise not
+  to include dashes in your index name or date format.
+
+  ## Migration
+
+  Prior to version 0.10.0, this moudle had inputs `index`, which was a comma-separated list of index names or the
+  special name "all" to indicate all but Kibana indexes, and `index_regex`, which was a regular expression for parsing
+  index name and date parts. There was no mechanism for specifying a list of indexes to exclude.
+  Starting with version 0.10.0 this module drops those inputs and instead takes `index_re` and `skip_index_re`,
+  both of which are regular expressions. (You probably want to anchor your regexes to the beginning of the index name
+  by starting with `^`).
+
+  | If you previously had | Now use |
+  |----------------------|----------|
+  |`index = "all"`| Default values for `index_re` and `skip_index_re`|
+  |`index = "a,xb,c0"` | `index_re = "^(a\|xb\|c0)"` and `skip_index_re = "^$"`|
+  |`index_regex = "(ipat)-(dpat)"`|`index_re = "ipat"` and be sure `index_format` is correct for your date format|
+
+
 include:
 - docs/targets.md
 - docs/terraform.md
