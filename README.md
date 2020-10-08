@@ -86,9 +86,40 @@ module "elasticsearch_cleanup" {
   vpc_id               = module.vpc.vpc_id
   namespace            = "eg"
   stage                = "dev"
-  schedule             = "rate(5 minutes)"
+  schedule             = "cron(0 3 * * ? *)"
 }
 ```
+
+Indexes are expected to be in the format `name-date` where `date` is in the format specified by `var.index_format`.
+By default, all indexes except for the ones added by Kibana will be deleted based on the date part of the full
+index name. The actual creation date of the index is not used.
+
+Index matching is done with unanchored regular expresssion, so "bar" matches index "foobarbaz".
+
+- If the full index name, including the date part, matches `skip_index_re`, then the index will be skipped (never deleted).
+  Kibana indexes are skipped by the default `skip_index_re` of `^\.kibana*` so if you specify a value for `skip_index_re`
+  you must include the Kibana exception in your regex if you want it excepted. (Since Kibana indexes do not have a
+  date part, this module should not delete them, but will complain about them having malformed dates if they are not excluded.)
+- If the index name without the trailing `-date` part matches `index_re`, then it will be cleaned up according to the date part.
+
+Keep in mind that, fundamentally, this module expects indexes to be in the format of `name-date` so it will not work
+properly if the regexes end up selecting an index that does not end with `-date`. To avoid edge cases, it is wise not
+to include dashes in your index name or date format.
+
+## Migration
+
+Prior to version 0.10.0, this moudle had inputs `index`, which was a comma-separated list of index names or the
+special name "all" to indicate all but Kibana indexes, and `index_regex`, which was a regular expression for parsing
+index name and date parts. There was no mechanism for specifying a list of indexes to exclude.
+Starting with version 0.10.0 this module drops those inputs and instead takes `index_re` and `skip_index_re`,
+both of which are regular expressions. (You probably want to anchor your regexes to the beginning of the index name
+by starting with `^`).
+
+| If you previously had | Now use |
+|----------------------|----------|
+|`index = "all"`| Default values for `index_re` and `skip_index_re`|
+|`index = "a,xb,c0"` | `index_re = "^(a\|xb\|c0)"` and `skip_index_re = "^$"`|
+|`index_regex = "(ipat)-(dpat)"`|`index_re = "ipat"` and be sure `index_format` is correct for your date format|
 
 
 
@@ -109,6 +140,7 @@ Available targets:
 
 ```
 <!-- markdownlint-restore -->
+<!-- markdownlint-disable -->
 ## Module: cloudposse/terraform-aws-lambda-elasticsearch-cleanup
 
 This module creates a scheduled Lambda function which will delete old  
@@ -120,38 +152,44 @@ is given
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.0, < 0.14.0 |
-| aws | ~> 2.0 |
-| null | ~> 2.0 |
-| template | ~> 2.0 |
+| terraform | >= 0.12.0 |
+| aws | >= 2.0 |
+| null | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.0 |
+| aws | >= 2.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
+| artifact\_git\_ref | Git ref of the lambda artifact to use. Use latest version if null. | `string` | `null` | no |
 | artifact\_url | URL template for the remote artifact | `string` | `"https://artifacts.cloudposse.com/$${module_name}/$${git_ref}/$${filename}"` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
+| context | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | <pre>object({<br>    enabled             = bool<br>    namespace           = string<br>    environment         = string<br>    stage               = string<br>    name                = string<br>    delimiter           = string<br>    attributes          = list(string)<br>    tags                = map(string)<br>    additional_tag_map  = map(string)<br>    regex_replace_chars = string<br>    label_order         = list(string)<br>    id_length_limit     = number<br>  })</pre> | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_order": [],<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {}<br>}</pre> | no |
 | delete\_after | Number of days to preserve | `number` | `15` | no |
-| delimiter | Delimiter to be used between `namespace`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
-| enabled | This module will not create any resources unless enabled is set to "true" | `bool` | `true` | no |
+| delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
+| enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
+| environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
 | es\_domain\_arn | The Elasticsearch domain ARN | `string` | n/a | yes |
 | es\_endpoint | The Elasticsearch endpoint for the Lambda function to connect to | `string` | n/a | yes |
 | es\_security\_group\_id | The Elasticsearch cluster security group ID | `string` | n/a | yes |
-| index | Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana` or `.kibana_1` | `string` | `"all"` | no |
+| id\_length\_limit | Limit `id` to this many characters.<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | index\_format | Combined with 'index' variable and is used to evaluate the index age | `string` | `"%Y.%m.%d"` | no |
-| index\_regex | Determines regex that is used for matching index name and index date. By default it match two groups separated by hyphen. | `string` | `"([^-]+)-(.*)"` | no |
-| name | Solution name, e.g. 'app' or 'cluster' | `string` | `"app"` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | `string` | `""` | no |
-| python\_version | The Python version to use | `string` | `"2.7"` | no |
+| index\_re | Regular Expression that matches the index names to clean up (not including trailing dash and date) | `string` | `".*"` | no |
+| label\_order | The naming order of the id output and Name tag.<br>Defaults to ["namespace", "environment", "stage", "name", "attributes"].<br>You can omit any of the 5 elements, but at least one must be present. | `list(string)` | `null` | no |
+| name | Solution name, e.g. 'app' or 'jenkins' | `string` | `null` | no |
+| namespace | Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp' | `string` | `null` | no |
+| python\_version | The Python version to use | `string` | `"3.7"` | no |
+| regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | schedule | CloudWatch Events rule schedule using cron or rate expression | `string` | `"cron(0 3 * * ? *)"` | no |
+| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>BY DEFAULT (when value is `null`), a pattern is used to exclude Kibana indexes.<br>Use `"^$"` if you do not want to skip any indexes. Include an exclusion for `kibana` if you<br>want to use a custom value and also exclude the kibana indexes. | `string` | `null` | no |
 | sns\_arn | SNS ARN to publish alerts | `string` | `""` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | `string` | `""` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | subnet\_ids | Subnet IDs | `list(string)` | n/a | yes |
 | tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
 | timeout | Timeout for Lambda function in seconds | `number` | `300` | no |
@@ -165,6 +203,7 @@ is given
 | lambda\_function\_source\_code\_size | The size in bytes of the function .zip file |
 | security\_group\_id | Security Group ID of the Lambda Function |
 
+<!-- markdownlint-restore -->
 
 
 

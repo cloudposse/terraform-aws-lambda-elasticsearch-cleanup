@@ -1,45 +1,3 @@
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
-}
-
-variable "name" {
-  type        = string
-  default     = "app"
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `namespace`, `stage`, `name` and `attributes`"
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
-}
-
-variable "enabled" {
-  type        = bool
-  default     = true
-  description = "This module will not create any resources unless enabled is set to \"true\""
-}
-
 variable "es_endpoint" {
   type        = string
   description = "The Elasticsearch endpoint for the Lambda function to connect to"
@@ -77,12 +35,6 @@ variable "sns_arn" {
   description = "SNS ARN to publish alerts"
 }
 
-variable "index" {
-  type        = string
-  default     = "all"
-  description = "Index/indices to process. Use a comma-separated list. Specify `all` to match every index except for `.kibana` or `.kibana_1`"
-}
-
 variable "delete_after" {
   type        = number
   default     = 15
@@ -95,15 +47,27 @@ variable "index_format" {
   description = "Combined with 'index' variable and is used to evaluate the index age"
 }
 
-variable "index_regex" {
+variable "index_re" {
   type        = string
-  default     = "([^-]+)-(.*)"
-  description = "Determines regex that is used for matching index name and index date. By default it match two groups separated by hyphen."
+  default     = ".*"
+  description = "Regular Expression that matches the index names to clean up (not including trailing dash and date)"
+}
+
+variable "skip_index_re" {
+  type = string
+  #default     = "^\\.kibana*"
+  default     = null
+  description = <<-EOT
+    Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.
+    BY DEFAULT (when value is `null`), a pattern is used to exclude Kibana indexes.
+    Use `"^$"` if you do not want to skip any indexes. Include an exclusion for `kibana` if you
+    want to use a custom value and also exclude the kibana indexes.
+    EOT
 }
 
 variable "python_version" {
   type        = string
-  default     = "2.7"
+  default     = "3.7"
   description = "The Python version to use"
 }
 
@@ -118,3 +82,10 @@ variable "artifact_url" {
   description = "URL template for the remote artifact"
   default     = "https://artifacts.cloudposse.com/$$${module_name}/$$${git_ref}/$$${filename}"
 }
+
+variable "artifact_git_ref" {
+  type        = string
+  description = "Git ref of the lambda artifact to use. Use latest version if null."
+  default     = null
+}
+

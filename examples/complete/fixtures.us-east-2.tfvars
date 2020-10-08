@@ -6,21 +6,19 @@ stage = "test"
 
 name = "es-cleanup"
 
-availability_zones = ["us-east-2a", "us-east-2b"]
+availability_zones = ["us-east-2a"]
 
-instance_type = "t2.small.elasticsearch"
+instance_type = "t3.small.elasticsearch"
 
-elasticsearch_version = "7.4"
+elasticsearch_version = "7.7"
 
-instance_count = 2
+instance_count = 1
 
-zone_awareness_enabled = true
+zone_awareness_enabled = false
 
 encrypt_at_rest_enabled = false
 
 dedicated_master_enabled = false
-
-kibana_subdomain_name = "kibana-es-cleanup"
 
 ebs_volume_size = 10
 

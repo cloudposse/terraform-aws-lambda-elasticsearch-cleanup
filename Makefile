@@ -1,6 +1,6 @@
 SHELL           := /bin/bash
 LAMBDA_DIR      := lambda
-DEPS_CONTAINER  := alpine:3.8
+DEPS_CONTAINER  := alpine:3.11
 
 # List of targets the `readme` target should call before generating the readme
 export README_DEPS ?= docs/targets.md docs/terraform.md
