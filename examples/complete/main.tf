@@ -36,6 +36,8 @@ module "elasticsearch" {
   encrypt_at_rest_enabled        = var.encrypt_at_rest_enabled
   dedicated_master_enabled       = var.dedicated_master_enabled
   create_iam_service_linked_role = var.create_iam_service_linked_role
+  domain_hostname_enabled        = var.domain_hostname_enabled
+  kibana_hostname_enabled        = var.kibana_hostname_enabled
   kibana_subdomain_name          = var.kibana_subdomain_name
   ebs_volume_size                = var.ebs_volume_size
   dns_zone_id                    = var.dns_zone_id
@@ -48,14 +50,15 @@ module "elasticsearch" {
 }
 
 module "elasticsearch_cleanup" {
-  source               = "../.."
+  source = "../.."
+
   es_endpoint          = module.elasticsearch.domain_endpoint
   es_domain_arn        = module.elasticsearch.domain_arn
   es_security_group_id = module.elasticsearch.security_group_id
   subnet_ids           = module.subnets.private_subnet_ids
   vpc_id               = module.vpc.vpc_id
-  namespace            = var.namespace
-  stage                = var.stage
   schedule             = var.schedule
   artifact_url         = var.artifact_url
+
+  context = module.this.context
 }
