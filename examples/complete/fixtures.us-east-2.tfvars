@@ -8,9 +8,9 @@ name = "es-cleanup"
 
 availability_zones = ["us-east-2a"]
 
-instance_type = "t2.small.elasticsearch"
+instance_type = "t3.small.elasticsearch"
 
-elasticsearch_version = "7.4"
+elasticsearch_version = "7.7"
 
 instance_count = 1
 
