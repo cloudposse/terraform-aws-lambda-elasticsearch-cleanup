@@ -18,6 +18,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	randId := strconv.Itoa(rand.Intn(100000))
 	attributes := []string{randId}
+	kibanaSubdomain := "kibana-es-cleanup-"+randId
 
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
@@ -29,6 +30,7 @@ func TestExamplesComplete(t *testing.T) {
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
 		Vars: map[string]interface{}{
 			"attributes": attributes,
+			"kibana_subdomain_name": kibanaSubdomain,
 		},
 	}
 
@@ -58,12 +60,12 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	domainHostname := terraform.Output(t, terraformOptions, "domain_hostname")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "es-cleanup.testing.cloudposse.co", domainHostname)
+	assert.Equal(t, "eg-test-es-cleanup-"+randId+".testing.cloudposse.co", domainHostname)
 
 	// Run `terraform output` to get the value of an output variable
 	kibanaHostname := terraform.Output(t, terraformOptions, "kibana_hostname")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "kibana-es-cleanup.testing.cloudposse.co", kibanaHostname)
+	assert.Equal(t, kibanaSubdomain+".testing.cloudposse.co", kibanaHostname)
 
 	// Run `terraform output` to get the value of an output variable
 	domainEndpoint := terraform.Output(t, terraformOptions, "domain_endpoint")
