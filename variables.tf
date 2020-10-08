@@ -59,8 +59,9 @@ variable "skip_index_re" {
   default     = null
   description = <<-EOT
     Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.
-    BY DEFAULT (when value is `null`), the pattern `^\.kibana*` is used to exclude Kibana indexes.
-    Use `"^$"` if you do not want to skip any indexes.
+    BY DEFAULT (when value is `null`), a pattern is used to exclude Kibana indexes.
+    Use `"^$"` if you do not want to skip any indexes. Include an exclusion for `kibana` if you
+    want to use a custom value and also exclude the kibana indexes.
     EOT
 }
 
