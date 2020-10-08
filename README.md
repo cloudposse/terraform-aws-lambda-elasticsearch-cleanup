@@ -187,7 +187,7 @@ is given
 | python\_version | The Python version to use | `string` | `"3.7"` | no |
 | regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | schedule | CloudWatch Events rule schedule using cron or rate expression | `string` | `"cron(0 3 * * ? *)"` | no |
-| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>\*\*By default\*\* (when value is `null`), the pattern `^\.kibana*` is used to exclude Kibana indexes.<br>Use `"^$"` if you do not want to skip any indexes. | `string` | `null` | no |
+| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>BY DEFAULT (when value is `null`), the pattern `^\.kibana*` is used to exclude Kibana indexes.<br>Use `"^$"` if you do not want to skip any indexes. | `string` | `null` | no |
 | sns\_arn | SNS ARN to publish alerts | `string` | `""` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | subnet\_ids | Subnet IDs | `list(string)` | n/a | yes |
