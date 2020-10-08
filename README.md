@@ -97,7 +97,7 @@ index name. The actual creation date of the index is not used.
 Index matching is done with unanchored regular expresssion, so "bar" matches index "foobarbaz".
 
 - If the full index name, including the date part, matches `skip_index_re`, then the index will be skipped (never deleted).
-  Kibana indexes are skipped by the default `skip_index_re` of `^\\.kibana*` so if you specify a value for `skip_index_re`
+  Kibana indexes are skipped by the default `skip_index_re` of `^\.kibana*` so if you specify a value for `skip_index_re`
   you must include the Kibana exception in your regex if you want it excepted. (Since Kibana indexes do not have a
   date part, this module should not delete them, but will complain about them having malformed dates if they are not excluded.)
 - If the index name without the trailing `-date` part matches `index_re`, then it will be cleaned up according to the date part.
@@ -187,7 +187,7 @@ is given
 | python\_version | The Python version to use | `string` | `"3.7"` | no |
 | regex\_replace\_chars | Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | schedule | CloudWatch Events rule schedule using cron or rate expression | `string` | `"cron(0 3 * * ? *)"` | no |
-| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>\*\*\*Default is actually\*\*\* `^\\.kibana` but the README generator has issues.<br>Use `"^$"` if you do not want to skip any indexes. | `string` | `null` | no |
+| skip\_index\_re | Regular Expression that matches the index names to ignore (not clean up). Takes precedence over `index_re`.<br>\*\*By default\*\* (when value is `null`), the pattern `^\.kibana*` is used to exclude Kibana indexes.<br>Use `"^$"` if you do not want to skip any indexes. | `string` | `null` | no |
 | sns\_arn | SNS ARN to publish alerts | `string` | `""` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | subnet\_ids | Subnet IDs | `list(string)` | n/a | yes |

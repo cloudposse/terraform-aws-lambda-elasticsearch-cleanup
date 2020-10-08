@@ -54,7 +54,7 @@ usage: |2-
   Index matching is done with unanchored regular expresssion, so "bar" matches index "foobarbaz".
 
   - If the full index name, including the date part, matches `skip_index_re`, then the index will be skipped (never deleted).
-    Kibana indexes are skipped by the default `skip_index_re` of `^\\.kibana*` so if you specify a value for `skip_index_re`
+    Kibana indexes are skipped by the default `skip_index_re` of `^\.kibana*` so if you specify a value for `skip_index_re`
     you must include the Kibana exception in your regex if you want it excepted. (Since Kibana indexes do not have a
     date part, this module should not delete them, but will complain about them having malformed dates if they are not excluded.)
   - If the index name without the trailing `-date` part matches `index_re`, then it will be cleaned up according to the date part.
