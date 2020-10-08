@@ -76,5 +76,5 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	lambdaFunctionArn := terraform.Output(t, terraformOptions, "lambda_function_arn")
 	// Verify we're getting back the outputs we expect
-	assert.Contains(t, lambdaFunctionArn, "function:eg-test-elasticsearch-cleanup")
+	assert.Contains(t, lambdaFunctionArn, "function:eg-test-es-cleanup")
 }
