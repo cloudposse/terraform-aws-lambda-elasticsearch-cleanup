@@ -86,6 +86,6 @@ variable "artifact_url" {
 variable "artifact_git_ref" {
   type        = string
   description = "Git ref of the lambda artifact to use. Use latest version if null."
-  default     = null
+  default     = ""
 }
 

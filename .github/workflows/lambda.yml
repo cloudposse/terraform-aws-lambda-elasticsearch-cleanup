@@ -10,6 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Get GitHub Commit SHA based on Ref
+        id: commit
+        run: |
+          if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then
+              echo "::set-output name=sha::${{ github.sha }}"
+          else
+              echo "::set-output name=sha::${{ github.event.pull_request.head.sha }}"
+          fi
       # Checkout the pull request branch
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,10 +38,10 @@ jobs:
         run: make build
 
       - name: Deploy
-        run: aws s3 cp --acl public-read artifacts/lambda.zip s3://artifacts.prod.cloudposse.org/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
+        run: aws s3 cp --acl public-read artifacts/lambda.zip s3://artifacts.prod.cloudposse.org/${{ github.event.repository.name }}/${{ steps.commit.outputs.sha }}/lambda.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Test Download from CDN
-        run: curl -fsSL -o /dev/null https://artifacts.cloudposse.com/${{ github.event.repository.name }}/${{ github.sha }}/lambda.zip
+        run: curl -fsSL -o /dev/null https://artifacts.cloudposse.com/${{ github.event.repository.name }}/${{ steps.commit.outputs.sha }}/lambda.zip
