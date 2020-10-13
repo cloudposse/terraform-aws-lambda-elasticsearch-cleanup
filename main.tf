@@ -10,6 +10,8 @@
 # Data
 #--------------------------------------------------------------
 data "aws_iam_policy_document" "assume_role" {
+  count = local.enabled ? 1 : 0
+
   statement {
     actions = ["sts:AssumeRole"]
     effect  = "Allow"
@@ -22,6 +24,8 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 data "aws_iam_policy_document" "es_logs" {
+  count = local.enabled ? 1 : 0
+
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -54,6 +58,8 @@ data "aws_iam_policy_document" "es_logs" {
 }
 
 data "aws_iam_policy_document" "sns" {
+  count = local.enabled ? 1 : 0
+
   statement {
     actions = [
       "sns:Publish"
@@ -68,8 +74,10 @@ data "aws_iam_policy_document" "sns" {
 }
 
 data "aws_iam_policy_document" "default" {
-  source_json   = data.aws_iam_policy_document.es_logs.json
-  override_json = length(var.sns_arn) > 0 ? data.aws_iam_policy_document.sns.json : "{}"
+  count = local.enabled ? 1 : 0
+
+  source_json   = join("", data.aws_iam_policy_document.es_logs.*.json)
+  override_json = length(var.sns_arn) > 0 ? join("", data.aws_iam_policy_document.sns.*.json) : "{}"
 }
 
 locals {
@@ -189,7 +197,7 @@ resource "aws_security_group_rule" "ingress_to_es_cluster_from_lambda" {
 resource "aws_iam_role" "default" {
   count              = local.enabled ? 1 : 0
   name               = local.function_name
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = join("", data.aws_iam_policy_document.assume_role.*.json)
   tags               = module.label.tags
 }
 
@@ -197,7 +205,7 @@ resource "aws_iam_role_policy" "default" {
   count  = local.enabled ? 1 : 0
   name   = local.function_name
   role   = join("", aws_iam_role.default.*.name)
-  policy = data.aws_iam_policy_document.default.json
+  policy = join("", data.aws_iam_policy_document.default.*.json)
 }
 
 resource "aws_iam_role_policy_attachment" "default" {
