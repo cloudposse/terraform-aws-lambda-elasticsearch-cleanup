@@ -88,7 +88,8 @@ locals {
 # Modules
 #--------------------------------------------------------------
 module "label" {
-  source = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
+  source  = "cloudposse/label/null"
+  version = "0.19.2"
 
   attributes = compact(concat(module.this.attributes, ["elasticsearch", "cleanup"]))
 
@@ -96,7 +97,8 @@ module "label" {
 }
 
 module "artifact" {
-  source      = "git::https://github.com/cloudposse/terraform-external-module-artifact.git?ref=tags/0.5.0"
+  source      = "cloudposse/module-artifact/external"
+  version     = "0.5.0"
   enabled     = module.this.enabled
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
