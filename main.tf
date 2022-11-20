@@ -98,7 +98,7 @@ module "label" {
 
 module "artifact" {
   source      = "cloudposse/module-artifact/external"
-  version     = "0.7.1"
+  version     = "0.7.2"
   enabled     = module.this.enabled
   filename    = "lambda.zip"
   module_name = "terraform-aws-lambda-elasticsearch-cleanup"
