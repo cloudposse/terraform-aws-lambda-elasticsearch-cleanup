@@ -9,7 +9,7 @@ Available targets:
   help/all                            Display help for all targets
   help/short                          This help short screen
   lint                                Lint terraform code
-  test                                Run tests
+  terratest                           Run tests
 
 ```
 <!-- markdownlint-restore -->
