@@ -30,8 +30,3 @@ build: dependencies
 	@mkdir -p artifacts
 	@cd $(LAMBDA_DIR) && zip -r  ../artifacts/lambda.zip *
 	@ls -l artifacts/lambda.zip
-
-## Run tests
-terratest::
-	# This project runs `git` externally, so it needs extra permissions when run by a GitHub Action
-	[[ -n "$$GITHUB_WORKSPACE" ]] && git config --global --add safe.directory "$$GITHUB_WORKSPACE" || true
