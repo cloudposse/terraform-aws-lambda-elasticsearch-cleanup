@@ -76,8 +76,8 @@ data "aws_iam_policy_document" "sns" {
 data "aws_iam_policy_document" "default" {
   count = local.enabled ? 1 : 0
 
-  source_json   = join("", data.aws_iam_policy_document.es_logs.*.json)
-  override_json = length(var.sns_arn) > 0 ? join("", data.aws_iam_policy_document.sns.*.json) : "{}"
+  source_policy_documents   = [join("", data.aws_iam_policy_document.es_logs.*.json)]
+  override_policy_documents = length(var.sns_arn) > 0 ? [join("", data.aws_iam_policy_document.sns.*.json)] : ["{}"]
 }
 
 locals {
