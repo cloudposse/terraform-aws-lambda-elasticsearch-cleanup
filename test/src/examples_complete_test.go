@@ -2,6 +2,7 @@ package test
 
 import (
 	"math/rand"
+  "strings"
 	"strconv"
 	"testing"
 	"time"
