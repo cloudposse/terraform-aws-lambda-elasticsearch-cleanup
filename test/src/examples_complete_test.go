@@ -2,7 +2,6 @@ package test
 
 import (
 	"math/rand"
-  "strings"
 	"strconv"
 	"testing"
 	"time"
@@ -44,7 +43,7 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	vpcCidr := terraform.Output(t, terraformOptions, "vpc_cidr")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "172.16.0.0/16", strings.Trim(vpcCidr, "\""))
+	assert.Equal(t, "172.16.0.0/16", vpcCidr)
 
 	// Run `terraform output` to get the value of an output variable
 	privateSubnetCidrs := terraform.OutputList(t, terraformOptions, "private_subnet_cidrs")
@@ -61,12 +60,12 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	domainHostname := terraform.Output(t, terraformOptions, "domain_hostname")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-es-cleanup-"+randId+".testing.cloudposse.co", strings.Trim(domainHostname, "\""))
+	assert.Equal(t, "eg-test-es-cleanup-"+randId+".testing.cloudposse.co", domainHostname)
 
 	// Run `terraform output` to get the value of an output variable
 	kibanaHostname := terraform.Output(t, terraformOptions, "kibana_hostname")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, kibanaSubdomain+".testing.cloudposse.co", strings.Trim(kibanaHostname, "\""))
+	assert.Equal(t, kibanaSubdomain+".testing.cloudposse.co", kibanaHostname)
 
 	// Run `terraform output` to get the value of an output variable
 	domainEndpoint := terraform.Output(t, terraformOptions, "domain_endpoint")
