@@ -2,26 +2,30 @@ name: terraform-aws-lambda-elasticsearch-cleanup
 license: APACHE2
 github_repo: cloudposse/terraform-aws-lambda-elasticsearch-cleanup
 badges:
-- name: GitHub Action Build Status
-  image: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/workflows/Lambda/badge.svg?branch=master
-  url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/actions?query=workflow%3ALambda
-- name: Latest Release
-  image: https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg
-  url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest
-- name: Slack Community
-  image: https://slack.cloudposse.com/badge.svg
-  url: https://slack.cloudposse.com
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-aws-lambda-elasticsearch-cleanup.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/commits
+  - name: Slack Community
+    image: https://slack.cloudposse.com/for-the-badge.svg
+    url: https://slack.cloudposse.com
+  - name: Tests
+    image: https://img.shields.io/github/actions/workflow/status/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/lambda.yml?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-lambda-elasticsearch-cleanup/actions/workflows/lambda.yml
+
+# List any related terraform modules that this module may be used with or that this module depends on.
 related:
-- name: terraform-aws-vpc
-  description: Terraform Module that defines a VPC with public/private subnets across
-    multiple AZs with Internet Gateways
-  url: https://github.com/cloudposse/terraform-aws-vpc
-- name: terraform-aws-dynamic-subnets
-  description: Terraform module for dynamic subnets provisioning.
-  url: https://github.com/cloudposse/terraform-aws-dynamic-subnets
-- name: terraform-aws-elasticsearch
-  description: Terraform module for AWS Elasticsearch provisioning.
-  url: https://github.com/cloudposse/terraform-aws-elasticsearch
+  - name: terraform-aws-vpc
+    description: Terraform Module that defines a VPC with public/private subnets across multiple AZs with Internet Gateways
+    url: https://github.com/cloudposse/terraform-aws-vpc
+  - name: terraform-aws-dynamic-subnets
+    description: Terraform module for dynamic subnets provisioning.
+    url: https://github.com/cloudposse/terraform-aws-dynamic-subnets
+  - name: terraform-aws-elasticsearch
+    description: Terraform module for AWS Elasticsearch provisioning.
+    url: https://github.com/cloudposse/terraform-aws-elasticsearch
 description: |-
   Terraform module to provision a scheduled Lambda function which will
   delete old Elasticsearch indexes using [SigV4Auth](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html) authentication. The
@@ -80,16 +84,6 @@ usage: |2-
 
 
 include:
-- docs/targets.md
-- docs/terraform.md
-contributors:
-- name: Josh Myers
-  github: joshmyers
-- name: Erik Osterman
-  github: osterman
-- name: Andriy Knysh
-  github: aknysh
-- name: Igor Rodionov
-  github: goruha
-- name: Marcin Brański
-  github: 3h4x
+  - docs/targets.md
+  - docs/terraform.md
+contributors: []
