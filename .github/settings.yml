@@ -1,0 +1,7 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-aws-lambda-elasticsearch-cleanup
+  description: Terraform module to provision a scheduled Lambda function which will delete old AWS ElasticSearch indices
+  homepage: https://cloudposse.com/accelerate
+  topics: terraform, terraform-modules, lambda, elasticsearch, elasticsearch-curator, retention, vacuum, indexes, log-search, purge, delete, logs, lambda-function
