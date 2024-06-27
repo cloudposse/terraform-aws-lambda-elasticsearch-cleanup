@@ -67,7 +67,7 @@ variable "skip_index_re" {
 
 variable "python_version" {
   type        = string
-  default     = "3.7"
+  default     = "3.12"
   description = "The Python version to use"
 }
 
