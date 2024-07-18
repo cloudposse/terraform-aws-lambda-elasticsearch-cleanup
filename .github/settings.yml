@@ -5,3 +5,4 @@ repository:
   description: Terraform module to provision a scheduled Lambda function which will delete old AWS ElasticSearch indices
   homepage: https://cloudposse.com/accelerate
   topics: terraform, terraform-modules, lambda, elasticsearch, elasticsearch-curator, retention, vacuum, indexes, log-search, purge, delete, logs, lambda-function
+
