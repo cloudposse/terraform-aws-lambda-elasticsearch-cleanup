@@ -6,3 +6,4 @@ repository:
   homepage: https://cloudposse.com/accelerate
   topics: terraform, terraform-modules, lambda, elasticsearch, elasticsearch-curator, retention, vacuum, indexes, log-search, purge, delete, logs, lambda-function
 
+
