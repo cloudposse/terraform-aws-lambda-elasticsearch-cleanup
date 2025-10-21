@@ -24,7 +24,7 @@ ebs_volume_size = 10
 
 create_iam_service_linked_role = false
 
-dns_zone_id = "Z3SO0TKDDQ0RGG"
+dns_zone_id = "Z0880904EUMUUAAGCA17"
 
 schedule = "rate(5 minutes)"
 
