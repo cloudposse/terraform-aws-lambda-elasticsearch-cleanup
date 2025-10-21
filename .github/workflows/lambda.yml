@@ -2,7 +2,7 @@ name: Lambda
 on:
   push:
     branches:
-      - master
+      - main
   pull_request: 
     types: [opened, synchronize, reopened]
 
@@ -13,7 +13,7 @@ jobs:
       - name: Get GitHub Commit SHA based on Ref
         id: commit
         run: |
-          if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then
+          if [[ '${{ github.ref }}' == 'refs/heads/main' ]]; then
               echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
           else
               echo "sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
