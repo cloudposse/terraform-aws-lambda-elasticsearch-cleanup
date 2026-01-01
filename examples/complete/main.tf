@@ -27,7 +27,7 @@ module "subnets" {
 
 module "elasticsearch" {
   source  = "cloudposse/elasticsearch/aws"
-  version = "0.44.0"
+  version = "0.50.0"
 
   security_groups                = [module.vpc.vpc_default_security_group_id]
   vpc_id                         = module.vpc.vpc_id
